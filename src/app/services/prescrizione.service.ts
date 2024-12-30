@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, docData, Firestore, Timestamp, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, docData, DocumentData, Firestore, getDocs, query, QuerySnapshot, Timestamp, updateDoc, where } from '@angular/fire/firestore';
 import { Prescrizione } from '../models/Prescrizione.model';
-import { map, Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +37,30 @@ export class PrescrizioneService {
   getItemById(id: string): Observable<any> {
     const itemDoc = doc(this.firestore, `${this.collectionName}/${id}`);
     return docData(itemDoc, { idField: 'id' });
+  }
+
+  //read a single item by ID
+  async getItemsByDate(date: Date): Promise<any[]> {
+
+    console.log(date);
+    const itemsCollection = collection(this.firestore, this.collectionName);
+    // Create a query against the collection.
+    const q = query(itemsCollection, where("da", "<=", date), where("a", ">=", date));
+    const querySnapshot = await getDocs(q);
+    const items: any[] = [];
+
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+      let data = doc.data();
+      //check if dates are instances of timestamp
+      if (data['da'] instanceof Timestamp || data['a'] instanceof Timestamp) {
+        data = { ...data, da: data['da'].toDate(), a: data['a'].toDate() };
+      }
+      items.push(data);
+    });
+
+    return items;
   }
 
   //update an item

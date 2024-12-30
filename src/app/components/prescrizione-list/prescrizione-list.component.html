@@ -1,0 +1,44 @@
+<div class="container position-relative">
+    <h1>
+        Drug Calendar App
+    </h1>
+    <div class="prescrizione-list-container mat-elevation-z3 p-3">
+
+        <mat-card class="demo-inline-calendar-card">
+            <mat-calendar [(selected)]="selected" (selectedChange)="openDialog()"></mat-calendar>
+        </mat-card>
+
+        <div class="prescrizione-item-container mat-elevation-z2 p-2 d-flex gap-2"
+            *ngFor="let item of prescrizioneList">
+            <mat-icon class="text-success" fontIcon="check_circle" role="button" (click)="markAsUndone(item)"
+                *ngIf="item.done"></mat-icon>
+            <mat-icon class="text-error" fontIcon="radio_button_unchecked" role="button" (click)="markAsDone(item)"
+                *ngIf="!item.done"></mat-icon>
+            <div>
+                <p class="mb-1 fw-bold" [ngClass]="{'done-prescrizione': item.done}">
+                    {{item.assegnatario}} - {{item.farmaco}} - {{item.quantita}}
+                </p>
+                <small>
+                    Da: {{item.da | date: 'dd/MM/yyyy'}}
+                    A: {{item.a | date: 'dd/MM/yyyy'}}
+                    Mattino:
+                    <mat-icon class="text-success" fontIcon="check_circle"
+                        *ngIf="item.turno.includes('mattina')"></mat-icon>
+                    <mat-icon class="text-error" fontIcon="radio_button_unchecked"
+                        *ngIf="!item.turno.includes('mattina')"></mat-icon>
+                    Sera:
+                    <mat-icon class="text-success" fontIcon="check_circle"
+                        *ngIf="item.turno.includes('sera')"></mat-icon>
+                    <mat-icon class="text-error" fontIcon="radio_button_unchecked"
+                        *ngIf="!item.turno.includes('sera')"></mat-icon>
+                </small>
+            </div>
+            <button mat-icon-button class="ms-auto text-danger" (click)="deletePrescrizione(item)">
+                <mat-icon>highlight_off</mat-icon>
+            </button>
+        </div>
+    </div>
+    <button mat-fab class="add-prescrizione-button" (click)="addNewPrescrizione()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
