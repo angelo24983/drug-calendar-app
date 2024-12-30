@@ -46,9 +46,7 @@ export class PrescrizioneListComponent {
   openDialog() {
     this.prescrizioneService.getItemsByDate(this.selected()!).then(data => {
       this.prescrizioneList = data;
-      console.log(data);
-      const dialogRef = this.dialog.open(DialogContentExampleDialog);
-
+      const dialogRef = this.dialog.open(PrescrizioneItemDialog);
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
       });
@@ -82,8 +80,8 @@ export class PrescrizioneListComponent {
 }
 
 @Component({
-  selector: 'dialog-content-example-dialog',
-  templateUrl: 'dialog-content-example-dialog.html',
+  selector: 'prescrizione-item-dialog',
+  templateUrl: 'prescrizione-item-dialog.html',
   standalone: true,
   imports: [MatDialogModule,
     MatButtonModule,
@@ -91,4 +89,4 @@ export class PrescrizioneListComponent {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogContentExampleDialog { }
+export class PrescrizioneItemDialog { }
